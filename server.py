@@ -1,80 +1,27 @@
-# -*- coding: utf-8 -*-
+import sys
 
 import tornado.ioloop
 import tornado.web
+from tornado.options import define, options
 
-from sockjs.tornado import SockJSConnection, SockJSRouter
-from multiplex import MultiplexConnection
+from urls import urls
+from settings import settings
 
-
-# Index page handler
-class IndexHandler(tornado.web.RequestHandler):
-    """Regular HTTP handler to serve the chatroom page"""
-    def get(self):
-        self.render('index.html')
+define("port", default=9090, help="run on the given port", type=int)
 
 
-# multiplex.js static handler
-class MultiplexStaticHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('multiplex.js')
+class Application(tornado.web.Application):
+    def __init__(self):
+        tornado.web.Application.__init__(self, urls, **settings)
 
-
-# Connections
-participants=set()
-
-class AnnConnection(SockJSConnection):
-    def on_open(self, info):
-        self.send('Ann says hi!!')
-	participants.add(self)
-
-    def on_message(self, message):
-        self.broadcast(participants,'Ann : ' + message)
- 
-
-
-
-  
-
-
-class BobConnection(SockJSConnection):
-    def on_open(self, info):
-        self.send('Bob doesn\'t agree.')
-	participants.add(self)
-
-    def on_message(self, message):
-        self.broadcast(participants,'Bob : ' + message)
-	
-
-class CarlConnection(SockJSConnection):
-    def on_open(self, info):
-        self.send('Carl says goodbye!')
-	participants.add(self)
-
-        self.close()
-
-    def on_message(self,message):
-	    pass
-
-	
-    def on_close(self):
-	    participants.remove(self)
-	    self.broadcast(participants,'Carl Left')
 
 if __name__ == "__main__":
-    import logging
-    logging.getLogger().setLevel(logging.DEBUG)
+    tornado.options.parse_command_line()
+    app = Application()
+    app.listen(options.port)
+    print "Starting server on http://127.0.0.1:%s" % options.port
 
-    # Create multiplexer
-    router = MultiplexConnection.get(ann=AnnConnection, bob=BobConnection, carl=CarlConnection)
-    print "router : ",router
-    # Register multiplexer
-    EchoRouter = SockJSRouter(router, '/echo')
-    # print "echorouter.ursl : ",EchoRouter.urls
-    # Create application
-    app = tornado.web.Application(
-            [(r"/", IndexHandler), (r"/multiplex.js", MultiplexStaticHandler)] + EchoRouter.urls
-    )
-    app.listen(9999)
-
-    tornado.ioloop.IOLoop.instance().start()
+    try:
+        tornado.ioloop.IOLoop.current().start()
+    except KeyboardInterrupt:
+        print "\nStopping server."
