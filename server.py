@@ -70,7 +70,7 @@ if __name__ == "__main__":
     print "router : ",router
     # Register multiplexer
     EchoRouter = SockJSRouter(router, '/echo')
-    print "echorouter.ursl : ",EchoRouter.urls
+    # print "echorouter.ursl : ",EchoRouter.urls
     # Create application
     app = tornado.web.Application(
             [(r"/", IndexHandler), (r"/multiplex.js", MultiplexStaticHandler)] + EchoRouter.urls

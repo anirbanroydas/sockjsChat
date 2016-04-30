@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>sockjsChat | Chat Server based on SockJS and Tornado</title>
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400,600,700" />
+      <script src="date.js"></script>
+    <style>
+        
+        h1 {
+            margin-left: 75px;
+        }
+        body {
+            background-color: #F0F0F0;
+            font-family: "Arial";
+        }
+
+
+
+        .connectbar div{
+          border-radius : 7px;
+            background-color: #ff326b;
+            width: 100px;
+            text-align: center;
+            margin: auto;
+        }
+        .connectbar a{
+           /* margin-left: 200px;*/
+            font-size: 20px;
+            font-family: 'Open Sans',sans-serif;
+            font-weight: 400;
+            color:#fff;
+            text-decoration: none;
+            
+
+        }
+
+         .connectbar h4{
+            font-size: 18px;
+            font-family: 'Open Sans',sans-serif;
+            font-weight: 400;
+           
+            /*text-align: center;*/
+            margin-left: 50%;
+            transform: translateX(-30px);
+            margin-top: 5px;
+            margin-bottom: 5px;
+         }
+
+        .connectbar h4.inactive{
+           color:#00B1E6;
+        }
+
+        .connectbar h4.active{
+          color: #41C197;
+        }
+
+        .box {
+            width: 350px;
+            float: right;
+            margin: 0 20px 0 20px;
+        }
+ 
+        .welcome{
+             float: left;
+             width: auto;
+              font-size: 40px;
+            font-family: 'Open Sans',sans-serif;
+            font-weight: 400;
+            color:#00B1E6;
+            
+            margin-left: 60px;
+            margin-top: 200px;
+        }
+
+        .welcome h3{
+           font-size: 20px;
+            font-family: 'Open Sans',sans-serif;
+            font-weight: bold;
+            color:#ff326b;
+            text-align: center;
+        }
+
+        .boxleft{
+          float: left;
+        }
+
+        .box div {
+            border-color: gray;
+            height: 380px;
+            overflow: auto;
+        }
+        
+        .box div.groupchatTB{
+          height: auto;
+  
+        }
+  
+          .box div.groupchatTB h4{
+            margin-bottom: 0px;
+             font-size: 16px;
+            font-family: 'Open Sans',sans-serif;
+            font-weight: bold;
+            color:#ff326b;
+            margin-left: 80px;
+            display: inline;
+          }
+
+          .boxleft div.groupchatTB h4{
+             margin-left: 120px;
+          }
+
+            .box div.groupchatTB h3{
+            margin-bottom: 0px;
+             font-size: 15px;
+            font-family: 'Open Sans',sans-serif;
+            font-weight: 300;
+            
+          }
+
+
+
+
+
+        .box div.groupchatCB, .box input.groupchatCB {
+            
+            border: 1px solid;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            width: 100%;
+            padding: 0px;
+            margin: 5px;
+        }
+
+        .boxleft div.privateList{
+            overflow: scroll;
+            background: #fff;
+        }
+  
+
+        .boxleft div.privateList .privateUserList{
+            list-style: none;
+            width: 320px;
+           background: #fff;
+
+        }
+      
+        
+        .boxleft div.privateList .privateUserList:hover{
+         cursor: pointer;
+          cursor: hand;
+         
+          
+        }
+
+
+        .boxleft div.privateList .privateUserList .privateUser{
+            font-size: 16px;
+            
+            border-bottom: 2px solid #e8e8e8;
+            margin-left: -50px;
+
+        }
+
+
+        
+
+
+        .boxleft div.privateList .privateUserList .privateUser p{
+            font-family: 'Open Sans',sans-serif;
+            font-weight: 400;
+            color:#666;
+            font-size: 15px;
+            margin-left: 50px;
+        }
+
+
+      .boxleft div.privateList .privateUser:hover p{
+        color:#41C197;
+        font-weight: bold;
+      }
+
+        
+        .box input {
+            height: 40px;
+        }
+
+
+      </style>
+    
+  </head>
+  <body>
+  <h2 style="text-align: center;margin-bottom: 10px">SockJS Chat Room!</h2>
+  <div id="protocols" style="float: right">
+    <ul>
+      <li>
+        <input id="websocket" type="checkbox" value="websocket" checked="checked"></input>
+        <label for="websocket">websocket</label>
+      </li>
+      <li>
+        <input id="xhr-streaming" type="checkbox" value="xhr-streaming" checked="checked"></input>
+        <label for="xhr-streaming">xhr-streaming</label>
+      </li>
+      <li>
+        <input id="iframe-eventsource" type="checkbox" value="iframe-eventsource" checked="checked"></input>
+        <label for="iframe-eventsource">iframe-eventsource</label>
+      </li>
+      <li>
+        <input id="iframe-htmlfile" type="checkbox" value="iframe-htmlfile" checked="checked"></input>
+        <label for="iframe-htmlfile">iframe-htmlfile</label>
+      </li>
+      <li>
+        <input id="xhr-polling" type="checkbox" value="xhr-polling" checked="checked"></input>
+        <label for="xhr-polling">xhr-polling</label>
+      </li>
+      <li>
+        <input id="iframe-xhr-polling" type="checkbox" value="iframe-xhr-polling" checked="checked"></input>
+        <label for="iframe-xhr-polling">iframe-xhr-polling</label>
+      </li>
+      <li>
+        <input id="jsonp-polling" type="checkbox" value="jsonp-polling" checked="checked"></input>
+        <label for="jsonp-polling">jsonp-polling</label>
+      </li>
+    </ul>
+  </div>
+
+  <div class='connectbar' >
+    <div>
+      <a id="connect" href="#">Connect</a>
+    </div>
+    <h4 id="status" class='inactive'>Offline</h4>
+  </div>
+
+  <div class="log box boxleft private">
+      <div class='groupchatTB'>
+        <h4>Private Chat </h4>
+        <!-- <h3 id='groupcount' style="display:inline;margin-left: 40px; color:#fff; border-radius: 25%;background: #41C197;width: 40px;height: 40px;">10</h3>
+        <h3 id='grouppeople' style="display:inline;color:#000;font-size: 16px;font-weight: 400">&nbsp;people</h3> -->
+        
+      </div>
+      <div class="groupchatCB privateList">
+        <ul class="privateUserList">
+          <li class="privateUser"><p>Rahul</p></li>
+          <li class="privateUser"><p>Geeta</p></li>
+          <li class="privateUser"><p>Suraj</p></li>
+          <li class="privateUser"><p>Diana</p></li>
+         
+
+        </ul>
+      </div>
+      <div class='groupchatCB chatbox' id='privateCB' style="display:none;"></div>
+      <form class="privateSend"><input id='privatetext' autocomplete="off" value="Type here..." class='groupchatCB' style="display: none"></input></form>
+  </div>
+
+  <div class='welcome'>
+      <!-- <code></code> -->
+  </div>
+
+
+  <div class="log box public">
+      <div class='groupchatTB'>
+        <h4>Group Chat </h4>
+        <h3 id='groupcount' style="display:inline;margin-left: 40px; color:#fff; border-radius: 25%;background: #41C197;width: 40px;height: 40px;">10</h3>
+        <h3 id='grouppeople' style="display:inline;color:#000;font-size: 16px;font-weight: 400">&nbsp;people</h3>
+        
+      </div>
+      <div class='groupchatCB chatbox'  id='groupCB' ></div>
+      <form  class="publicSend"><input id='publictext' autocomplete="off" value="Type here..." class='groupchatCB'></input></form>
+  </div>
+  <!-- <div id="log" style="width: 60em; height: 20em; overflow:auto; border: 1px solid black">
+  </div> -->
+ <!--  <form id="chatform">
+    <input id="text" type="text" />
+    <input type="submit" />
+  </form> -->
+  </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/sockjs/0.3/sockjs.min.js"></script>
+    <script src="multiplex.js"></script>
+    
+
+    <script>
+     $(document).ready(function(){
+
+        console.log('inside documet.read ()');
+        
+         var person='';
+         console.log(' person : '+person);
+
+         function myFunction() {
+                console.log('inside myFunction()');
+
+                person = prompt("Please enter your name", "nick");
+                
+                if (person==null){
+                      console.log('person == null');
+                      console.log('invoke myFunction() recursively again');
+                      myFunction();
+                      console.log('reutrning from myFunction()');
+                    }
+
+                else if (person==''){
+                      console.log('person==empty');
+                      console.log('invoke myFunction() recursively again');
+                      myFunction();
+                      console.log('returning from myFunction');
+                      
+                    }
+                else if (person != null) {
+                    console.log('person != null')
+                    $('.welcome').append('Welcome')
+                    $('.welcome').append('<br>')
+                     $('.welcome').append($('<h3>').text(person+' <3'));
+                     $('.welcome').append($('<code>'));
+
+                     console.log('text transformations done');
+                     console.log('returning from myFunction');
+
+                }
+                
+            }
+
+        $(window).bind("load", function() {
+
+                    console.log('inside window.bind load funtion ');
+                    console.log('invokeing myFunction first time');
+                    myFunction();
+                    console.log('returning from window.bind load myFunction');
+
+          });
+
+
+        
+
+
+
+
+        var conn = null;
+        var multiplexer = null;
+
+        console.log(' conn : '+conn);
+        console.log('multiplexer : '+multiplexer);
+        // function log(t,msg) {
+          
+        //   if (t=='g'){
+        //     var control = $('.log #groupCB');
+        //   }
+        //   else{
+        //     var control = $('.log #privateCB');
+        //   }
+        //   control.html(control.html() + msg + '<br/>');
+        //   control.scrollTop(control.scrollTop() + 1000);
+        // }
+
+        
+
+
+        function connect() {
+                  console.log('inside connect()');
+                  console.log('invoking disconnect()');
+                  disconnect();
+                  console.log('disconnect() invoked successful');
+
+
+                  var pipe = function(ws, el_name) {
+                      console.log('inside pipe()');
+                      var chatbox  = $(el_name + ' .chatbox');
+                      var inp  = $(el_name + ' input');
+                      var form = $(el_name + ' form');
+                      console.log('chatbaox : '+chatbox+" inp : "+inp+" form : "+form);
+                      var print = function(p) {
+                          console.log('inside print()');
+                          p = (p === undefined) ? '' : JSON.stringify(p);
+                          console.log(' p : '+p);
+                          var tm= new Date().toString("hh:mm tt");
+                          console.log(" time : "+tm)
+                          chatbox.append($("<code>").text('['+tm+']'));
+                          chatbox.append($("<br>"));
+                          chatbox.append($("<code>").text(p));
+                          chatbox.scrollTop(chatbox.scrollTop() + 10000);
+                          console.log('text transformations done ');
+                          console.log('returnin from pipe()');
+                      };
+
+                      ws.onopen    = function()  { console.log('inside ws.onopen()');
+                                                    var res ={'name':person,
+                                                              'isFirst':1
+                                                            };
+                                                    console.log(' res : '+res);
+                                                    res= JSON.stringify(res);
+                                                    console.log(' res= json.stringfiy(res) : '+res);
+                                                    ws.send(res);
+                                                    console.log('returnin from ws.onopen');
+                                                };
+                      ws.onmessage = function(e) {  
+                                                   console.log('inside ws.onmessage()');
+                                                    print( e.data);
+                                                    console.log('returnin from ws.onmessage');
+                                                  };
+                      ws.onclose   = function()  {
+                                                    console.log('inside ws.onclose()');
+                                                    print('[*]  close ');
+                                                    console.log('returnin from ws.onclose');
+                                                  };
+
+                      form.submit(function() {
+                          console.log('inside form.submit()');
+                          // print('['+person+']', inp.val());
+                          var res= {'name':person,
+                                    'isFirst':0,
+                                      'message':inp.val()};
+                          console.log(' res : '+res);
+                          res= JSON.stringify(res);
+                          console.log(' res= json.stringfiy(res) : '+res);
+                          ws.send(res);
+                          inp.val('');
+                          console.log('returning from form.submit');
+                          return false;
+                      });
+                  };
+
+                
+                var transports = $('#protocols input:checked').map(function(){
+                      return $(this).attr('id');
+                  }).get();
+
+                console.log('creating new sockjs connection ');
+                conn = new SockJS('http://' + window.location.host + '/chat', transports);
+                console.log(' conn created successful - conn : '+conn);
+                console.log('creating new multiplexer object ');
+               multiplexer = new MultiplexedWebSocket(conn);
+               console.log('multiplexer object created successfully - multiplexer : '+multiplexer);
+
+            
+
+                $('.welcome code').text('Connecting...');
+                console.log('welcome append code connecting...');
+                conn.onopen = function() {
+                  console.log('inside conn.onopen() ');
+                  $('.welcome code').text('Connected');
+                  console.log('text transformations done ');
+
+                  console.log('invoke update_ui()');
+                  update_ui();
+                  console.log('update_ui() invoked successul')
+                };
+
+                
+
+                conn.onclose = function() {
+                  console.log('inside conn.onclose()');
+                   $('.welcome code').text('');
+                   console.log('text transformations done ');
+                  conn = null;
+                  console.log(' conn=null -> conn : '+conn);
+
+                  console.log('invoke update_ui()');
+                  update_ui();
+                  console.log('update_ui() invoked successul')
+                };
+
+
+
+                console.log('group multiplexer creating ');
+                var group  = multiplexer.channel('group');
+                console.log(' grou multiplexer : '+group);
+                console.log('invoke pipe(group');
+                pipe(group,  '.public');
+                console.log('pipe(group) invoked successfully');
+
+
+
+
+                // var private= multiplexer.channel('private');
+
+                
+                // pipe(private,  '.private');
+        }
+
+
+        $('.privateUser').click(function(e){
+                      var v= $(this).children('p').text();
+                      var private= multiplexer.channel(v);
+                      pipe(private,  '.private')
+                });
+
+
+
+        function disconnect() {
+          console.log('inside disconnect()');
+          if (conn != null) {
+            console.log('conn!=null');
+            $('.welcome code').text('Diconnecting...');
+            console.log('text transformations done');
+            console.log('invoking conn.close()');
+            conn.close();
+            console.log('conn.close() invoked successful');
+            conn = null;
+            console.log('conn=null');
+            console.log(' conn : '+conn);
+            $('.welcome code').text('');
+            console.log('text.transformations done');
+          }
+        }
+
+        function update_ui() {
+          var msg = '';
+          console.log('inside update_ui');
+          if (conn == null || conn.readyState != SockJS.OPEN) {
+            console.log('conn==null or conn.readyState !=SockJS.Open');
+            $('#status').text('Offline').removeClass('active').addClass('inactive');
+            $('#connect').text('Connect');
+            console.log('text transformations done');
+          } 
+          else {
+            console.log('conn != Null');
+            $('#status').text('Online - ' + conn.protocol).removeClass('inactive').addClass('active');
+            $('#connect').text('Disconnect');
+            console.log('text transformations done');
+          }
+        }
+
+        $('#connect').click(function() {
+          console.log('clicked #connect');
+          if (conn == null) {
+              console.log('conn==null');
+              console.log('invoking connect()');
+            connect();
+            console.log('invoked connect() successful');
+          } 
+          else {
+            console.log('conn!= null');
+            console.log('invoking disconnect()');
+            disconnect();
+            console.log('invoked disconnect() successful');
+          }
+
+          return false;
+        });
+
+        // $('form.publicSend').submit(function() {
+        //   var text = $('#publictext').val();
+        //   log('Sending: ' + text);
+        //   conn.send(text);
+        //   $('#text').val('').focus();
+        //   return false;
+        // });
+
+
+
+
+      });
+  </script>
+</html>

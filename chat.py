@@ -43,7 +43,7 @@ if __name__ == "__main__":
     # 1. Create chat router
     print "Chant connection type : ",ChatConnection
     ChatRouter = sockjs.tornado.SockJSRouter(ChatConnection, '/chat')
-    print "\nChatRouter.urls : ",ChatRouter.urls
+    # print "\nChatRouter.urls : ",ChatRouter.urls
     
     # 2. Create Tornado application
     app = tornado.web.Application(
