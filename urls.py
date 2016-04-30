@@ -1,8 +1,9 @@
 from tornado import web
 from tornado.web import URLSpec as url
+from sockjs.tornado import SockJSRouter
+
 from settings import settings
 from utils import include
-
 from multiplex import MultiplexConnection
 from apps.main.views import groupConnection, privateConnection
 
@@ -20,6 +21,6 @@ urls = [
 ]
 urls += include(r"/", "apps.main.urls")
 
-urls = url + EchoRouter.urls
+urls = urls + EchoRouter.urls
 
 

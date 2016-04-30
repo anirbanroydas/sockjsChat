@@ -1,7 +1,7 @@
 import tornado.web
 import tornado.escape
 
-from sockjs.tornado import SockJSConnection, SockJSRouter
+from sockjs.tornado import SockJSConnection
 
 
 
@@ -10,13 +10,6 @@ class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('index.html')
         print
-
-
-# multiplex.js static handler
-class MultiplexStaticHandler(tornado.web.RequestHandler):
-    def get(self,f):
-    	print "\ninside multiplexerStaticHandler : f  -> ",f
-        self.render('multiplex.js')
 
 
 
