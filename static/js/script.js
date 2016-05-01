@@ -25,10 +25,9 @@ $(document).ready(function(){
                       
                     }
                 else if (person != null) {
-                    console.log('person != null')
-                    $('.welcome').append('Welcome')
-                    $('.welcome').append('<br>')
-                     $('.welcome').append($('<h3>').text(person+' <3'));
+                    console.log('person != null');
+                    $('.welcome .welcomeLine').append($('<h2>').text('Welcome, '));
+                     $('.welcome .welcomeLine').append($('<h3>').text(person+'.'));
                      $('.welcome').append($('<code>'));
 
                      console.log('text transformations done');
@@ -55,6 +54,9 @@ $(document).ready(function(){
 
         var conn = null;
         var multiplexer = null;
+        var group= null;
+        var private = null;
+        var disconn = 0;
 
         console.log(' conn : '+conn);
         console.log('multiplexer : '+multiplexer);
@@ -75,6 +77,9 @@ $(document).ready(function(){
 
         function connect() {
                   console.log('inside connect()');
+                  console.log('disconn before : '+disconn);
+                  disconn=0;
+                  console.log('disconn now : '+disconn);
                   console.log('invoking disconnect()');
                   disconnect();
                   console.log('disconnect() invoked successful');
@@ -88,6 +93,7 @@ $(document).ready(function(){
                       console.log('chatbaox : '+chatbox+" inp : "+inp+" form : "+form);
                       var print = function(p) {
                           console.log('inside print()');
+                          console.log('p before stringigy : '+p)
                           p = (p === undefined) ? '' : JSON.stringify(p);
                           console.log(' p : '+p);
                           var tm= new Date().toString("hh:mm tt");
@@ -95,6 +101,8 @@ $(document).ready(function(){
                           chatbox.append($("<code>").text('['+tm+']'));
                           chatbox.append($("<br>"));
                           chatbox.append($("<code>").text(p));
+                          chatbox.append($("<br>"));
+                          chatbox.append($("<br>"));
                           chatbox.scrollTop(chatbox.scrollTop() + 10000);
                           console.log('text transformations done ');
                           console.log('returnin from pipe()');
@@ -102,7 +110,7 @@ $(document).ready(function(){
 
                       ws.onopen    = function()  { console.log('inside ws.onopen()');
                                                     var res ={'name':person,
-                                                              'isFirst':1
+                                                              'stage':'start'
                                                             };
                                                     console.log(' res : '+res);
                                                     res= JSON.stringify(res);
@@ -112,7 +120,25 @@ $(document).ready(function(){
                                                 };
                       ws.onmessage = function(e) {  
                                                    console.log('inside ws.onmessage()');
+                                                   console.log('invoking print(e.data)');
                                                     print( e.data);
+                                                    console.log('print(e.data) invoke successfully');
+                                                    console.log('disconn now : '+disconn);
+                                                    if(disconn==1){
+                                                            console.log('inside disconn==1');
+                                                            console.log('invoking ws.close()');
+                                                            ws.close();
+                                                            console.log('ws.close() invoked successful');
+                                                            console.log('invoking conn.close()');
+                                                            conn.close()
+                                                            //conn.close();
+                                                            console.log('conn.close() invoked successful');
+                                                            conn = null;
+                                                            console.log('conn=null');
+                                                            console.log(' conn : '+conn);
+                                                            $('.welcome code').text('');
+                                                            console.log('text.transformations done');
+                                                    }
                                                     console.log('returnin from ws.onmessage');
                                                   };
                       ws.onclose   = function()  {
@@ -125,13 +151,15 @@ $(document).ready(function(){
                           console.log('inside form.submit()');
                           // print('['+person+']', inp.val());
                           var res= {'name':person,
-                                    'isFirst':0,
+                                    'stage':'process',
                                       'message':inp.val()};
                           console.log(' res : '+res);
                           res= JSON.stringify(res);
                           console.log(' res= json.stringfiy(res) : '+res);
+                          console.log('sending ws.send(res)');
                           ws.send(res);
-                          inp.val('');
+                          console.log('ws.send(res) invoked successul');
+                          
                           console.log('returning from form.submit');
                           return false;
                       });
@@ -149,10 +177,12 @@ $(document).ready(function(){
                multiplexer = new MultiplexedWebSocket(conn);
                console.log('multiplexer object created successfully - multiplexer : '+multiplexer);
 
+               
             
 
                 $('.welcome code').text('Connecting...');
                 console.log('welcome append code connecting...');
+
                 conn.onopen = function() {
                   console.log('inside conn.onopen() ');
                   $('.welcome code').text('Connected');
@@ -161,6 +191,15 @@ $(document).ready(function(){
                   console.log('invoke update_ui()');
                   update_ui();
                   console.log('update_ui() invoked successul')
+
+                  console.log('group multiplexer creating ');
+                  group  = multiplexer.channel('group');
+                  console.log(' grou multiplexer : '+group);
+
+                  console.log('invoke pipe(group');
+                  pipe(group,  '.public');
+                  console.log('pipe(group) invoked successfully');
+
                 };
 
                 
@@ -179,12 +218,11 @@ $(document).ready(function(){
 
 
 
-                console.log('group multiplexer creating ');
-                var group  = multiplexer.channel('group');
-                console.log(' grou multiplexer : '+group);
-                console.log('invoke pipe(group');
-                pipe(group,  '.public');
-                console.log('pipe(group) invoked successfully');
+                
+
+
+                
+                
 
 
 
@@ -207,17 +245,23 @@ $(document).ready(function(){
         function disconnect() {
           console.log('inside disconnect()');
           if (conn != null) {
-            console.log('conn!=null');
-            $('.welcome code').text('Diconnecting...');
-            console.log('text transformations done');
-            console.log('invoking conn.close()');
-            conn.close();
-            console.log('conn.close() invoked successful');
-            conn = null;
-            console.log('conn=null');
-            console.log(' conn : '+conn);
-            $('.welcome code').text('');
-            console.log('text.transformations done');
+                console.log('disconn before : '+disconn);
+                disconn=1;
+                console.log('disconn now : '+disconn);
+                console.log('conn!=null');
+                $('.welcome code').text('Diconnecting...');
+                console.log('text transformations done');
+                
+                var res= {'name':person,
+                          'stage':'end'
+                           };
+                console.log(' res : '+res);
+                res= JSON.stringify(res);
+                console.log(' res= json.stringfiy(res) : '+res);
+                console.log('invoking group.send(res)');
+                group.send(res)
+                console.log('group.send(res) invoked successfully');
+           
           }
         }
 
