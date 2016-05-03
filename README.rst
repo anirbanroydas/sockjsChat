@@ -2,7 +2,7 @@
 sockjsChat
 ========================
 
-A sockJS based Chat-Server/Chat-System primary using SockJS protocol.
+A sockJS based Chat-Server/Chat-System primary using the SockJS protocol.
 
 -------
 Details
@@ -18,11 +18,11 @@ Check sockjsChat/LICENSE file for full Copyright notice.
 Overview
 --------
 
-sockjsChat is a very basic Chat Server which can be set up locally to chat in your LAN. It supports both public chat among all participants at a time and also private chat between those participants.
+sockjsChat is a very basic Chat Server which can be set up locally to chat in your LAN. It supports both **Public Chat** among all participants connected simultaneously at a particulartime and also **Private Chat** between those individual participants.
 
-It uses the sockjs protocol to implement the real time message passing system. SockJS is implemented in many languages, primarily javascript to talk to servers in real time using its protocol, which tries to create a duplex bi-directional connectin between the client (browser) and the server. It first tries to create websocket connection, and if it fails then it fallbacks to other transport mechanisms, such as ajax, long polling, etc.
+It uses the **sockjs** protocol to implement the real time message passing system. **SockJS** is implemented in many languages, primarily javascript to talk to servers in real time using its protocol, which tries to create a duplex bi-directional connectin between the **Client(browser)** and the **Server**. The server should also implement the **sockjs** protocol. Thus, using the **sockjs-tornado** library which exposes the **sockjs** protocol in **tornado** server.  It first tries to create a **Websocket**  connection, and if it fails then it fallbacks to other transport mechanisms, such as **ajax**, **long polling**, etc.
 
-You can read more about the sockjs `here <https://github.com/sockjs/sockjs-client>`_
+You can read more about **sockjs** `here <https://github.com/sockjs/sockjs-client>`_
 
 ---------------
 Technical Specs
@@ -45,12 +45,18 @@ Prerequisites
 3. sockjs-tornado
 4. sockjs-client
 
+
+Install
+```````
+
 ::
+        
         pip install sockjsChat
 
-If dependencies do not get installed by the above command already, then use the below steps to install them one by one.
+If the above dependencies do not get installed by the above command, then use the below steps to install them one by one.
 
-````````````````````
+
+
 Step 1 - Install pip
 ````````````````````
 
@@ -61,12 +67,54 @@ Follow the below methods for installing pip. One of them may help you to install
 * **Method 3 -** If you installed python on MAC OS X via ``brew install python``, then pip is already installed along with python.
 
 
-
-``````
-Step 2
-``````
+Step 2 - Install tornado
+````````````````````````
 ::
+
         pip install tornado
+
+Step 3 - Install sockjs-tornado
+```````````````````````````````
+::
+
+        pip install sockjs-tornado
+
+
+------        
+Usage
+------
+
+After having installed sockjsChat, just run the following command to use it :
+
+* **Start/Stop Server**
+   ::
+
+           $ sockjsChat [options] [command]
+
+   - **Options**
+       :-p or -port: port number where to start the server, default=8181
+       
+   - **Commands**
+       :start: Start the server.
+       :stop: Stop the server, while stopping, no need for giving the options parameters.
+
+
+* **Example**
+  ::
+
+          $ sockjsChat -p 8765 start
+          $ sockjsChat start
+          $ sockjsChat stop
+
+
+
+----
+TODO
+----
+
+1. Add Private Chat functionality.
+2. Manage Presence Management, sent, delivered acknowledgements.
+3. Message Persistence and delivery of messages to offline clients.
 
 
 
