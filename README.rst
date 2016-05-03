@@ -114,9 +114,4 @@ TODO
 1. Add Private Chat functionality.
 2. Manage Presence Management, sent, delivered acknowledgements.
 3. Message Persistence and delivery of messages to offline clients.
-
-
-
-
-
-
+4. Add Blog post regarding this topic.
