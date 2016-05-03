@@ -58,6 +58,8 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+docs/_static/
+docs/_templates
 
 # PyBuilder
 target/
@@ -67,5 +69,8 @@ target/
 
 #pyenv
 .python-version
+
+# windows related
+*.bat
 
 
