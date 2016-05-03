@@ -32,11 +32,13 @@ Technical Specs
 :Tornado: async python web server
 :sockjs-tornado: sockjs websocket server implementation for Tornado
 
+
+         
 ------------
 Installation
 ------------
 
-`````````````
+
 Prerequisites
 `````````````
 
@@ -55,31 +57,28 @@ Install
 
 If the above dependencies do not get installed by the above command, then use the below steps to install them one by one.
 
+ **Step 1 - Install pip**
+ 
+ Follow the below methods for installing pip. One of them may help you to install pip in your system.
+
+ * **Method 1 -**  https://pip.pypa.io/en/stable/installing/
+ * **Method 2 -** http://ask.xmodulo.com/install-pip-linux.html
+ * **Method 3 -** If you installed python on MAC OS X via ``brew install python``, then pip is already installed along with python.
 
 
-Step 1 - Install pip
-````````````````````
+ **Step 2 - Install tornado**
+ ::
 
-Follow the below methods for installing pip. One of them may help you to install pip in your system.
+        pip install tornado 
+        
 
-* **Method 1 -**  https://pip.pypa.io/en/stable/installing/
-* **Method 2 -** http://ask.xmodulo.com/install-pip-linux.html
-* **Method 3 -** If you installed python on MAC OS X via ``brew install python``, then pip is already installed along with python.
-
-
-Step 2 - Install tornado
-````````````````````````
-::
-
-        pip install tornado
-
-Step 3 - Install sockjs-tornado
-```````````````````````````````
-::
+ **Step 3 - Install sockjs-tornado**
+ ::
 
         pip install sockjs-tornado
+ 
 
-
+ 
 ------        
 Usage
 ------
