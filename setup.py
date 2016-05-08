@@ -20,7 +20,8 @@ NAME = "sockjsChat"
 
 VERSION = '1.1.0'
 
-PACKAGES = find_packages(where="sockjsChat")
+# PACKAGES = find_packages(where="sockjsChat")
+PACKAGES = ["sockjsChat", "sockjsChat.apps", "sockjsChat.apps.main"]
 
 PROJECT_URL = 'https://github.com/anirbanroydas/sockjsChat'
 
@@ -75,7 +76,7 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 
 ####  Get the long description from the README file
-with open(os.path.join(HERE, 'README.rst'), encoding='utf-8') as f:
+with codecs.open(os.path.join(HERE, 'README.rst'), 'rb' , 'utf-8') as f:
 	LONG_DESCRIPTION = f.read()
 
 
