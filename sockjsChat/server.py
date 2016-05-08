@@ -1,5 +1,4 @@
 import sys
-
 import tornado.ioloop
 import tornado.web
 from tornado.options import define, options
@@ -20,7 +19,7 @@ class Application(tornado.web.Application):
         print 'returning from Application __init__'
 
 
-if __name__ == "__main__":
+def main():
     tornado.options.parse_command_line()
     print '\ncreating app=Applicatoin()'
     app = Application()
@@ -32,3 +31,11 @@ if __name__ == "__main__":
         tornado.ioloop.IOLoop.current().start()
     except KeyboardInterrupt:
         print "\nStopping server."
+
+
+
+
+
+
+if __name__ == "__main__":
+    main()

@@ -10,6 +10,8 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 settings = {
 
 
+
+
     # debug: If True the application runs in debug mode
     #'debug': True,
     #
