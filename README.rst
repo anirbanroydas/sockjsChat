@@ -84,9 +84,9 @@ Usage
 After having installed sockjsChat, just run the following command to use it :
 
 * **Start Server**
-   ::
-
-           $ sockjsChat [options]
+  ::
+          
+          $ sockjsChat [options]
 
 
 
