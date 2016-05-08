@@ -4,6 +4,9 @@ sockjsChat
 
 A sockJS based Chat-Server/Chat-System primary using the SockJS protocol.
 
+**Home Page :** https://pypi.python.org/pypi/sockjsChat 
+
+
 -------
 Details
 -------
