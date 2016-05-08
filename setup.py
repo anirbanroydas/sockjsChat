@@ -65,7 +65,16 @@ INSTALL_REQUIRES = ["tornado >= 2.2.1",
 
 EXTRAS_REQUIRE = {}
 
-PACKAGE_DATA = {}
+PACKAGE_DATA = {
+		# data files need to be listed both here (which determines what gets
+        # installed) and in MANIFEST.in (which determines what gets included
+        # in the sdist tarball)
+        "sockjsChat":["static/css/*.css",
+        			  "static/js/*.js",
+        			  "templates/*.html",
+        			  ],
+
+        }
 
 # DATA_FILES =[]
 
