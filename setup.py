@@ -41,8 +41,7 @@ CLASSIFIERS = [
 
 	# Indicate who your project is intended for
 	'Intended Audience :: Developers',
-	'Topic :: Software Development :: Build Tools :: Python Script :: Chat Server',
-
+	
     # Pick your license as you wish (should match "license" above)
 	'License :: OSI Approved :: MIT License',
 
@@ -56,7 +55,7 @@ CLASSIFIERS = [
 	'Programming Language :: Python :: 2',
 	'Programming Language :: Python :: 2.7',
 	'Programming Language :: Python :: Implementation :: CPython',
-	
+
 	]
 
 INSTALL_REQUIRES = ["tornado >= 2.2.1",
