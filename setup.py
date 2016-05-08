@@ -37,7 +37,7 @@ CLASSIFIERS = [
 	#   3 - Alpha
 	#   4 - Beta
     #   5 - Production/Stable
-	'Development Status :: 4 - Alpha',
+	'Development Status :: 4 - Beta',
 
 	# Indicate who your project is intended for
 	'Intended Audience :: Developers',
