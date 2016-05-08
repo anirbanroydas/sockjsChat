@@ -83,7 +83,7 @@ Usage
 
 After having installed sockjsChat, just run the following command to use it :
 
-* **Start/Stop Server**
+* **Start Server**
    ::
 
            $ sockjsChat [options]
@@ -99,6 +99,10 @@ After having installed sockjsChat, just run the following command to use it :
 
           $ sockjsChat --port=8765
 
+
+* **Stop Server**
+  
+  Click ``Ctrl+C`` to stop the server.
 
 
 ----
