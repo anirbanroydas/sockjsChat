@@ -88,22 +88,17 @@ After having installed sockjsChat, just run the following command to use it :
 * **Start/Stop Server**
    ::
 
-           $ sockjsChat [options] [command]
+           $ sockjsChat [options]
 
-   - **Options**
-       :-p or -port: port number where to start the server, default=8181
-       
-   - **Commands**
-       :start: Start the server.
-       :stop: Stop the server, while stopping, no need for giving the options parameters.
 
+* **Options**::
+
+ :--port: Port number where the chat server will start
 
 * **Example**
   ::
 
-          $ sockjsChat -p 8765 start
-          $ sockjsChat start
-          $ sockjsChat stop
+          $ sockjsChat --port=8765
 
 
 
