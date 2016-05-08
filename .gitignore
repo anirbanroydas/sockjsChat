@@ -73,4 +73,5 @@ target/
 # windows related
 *.bat
 
-
+# backup files
+*.bak
