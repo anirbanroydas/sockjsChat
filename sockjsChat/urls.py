@@ -15,7 +15,7 @@ EchoRouter = SockJSRouter(router, '/chat')
 
 
 urls = [
-    url(r"/static/(.*)", web.StaticFileHandler, abs{"path": settings.get('static_path')}),
+    url(r"/static/(.*)", web.StaticFileHandler, {"path": settings.get('static_path')}),
 ]
 urls += include(r"/", "apps.main.urls")
 
