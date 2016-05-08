@@ -77,8 +77,6 @@ If the above dependencies do not get installed by the above command, then use th
 
         pip install sockjs-tornado
  
-
- 
 ------        
 Usage
 ------
@@ -91,9 +89,10 @@ After having installed sockjsChat, just run the following command to use it :
            $ sockjsChat [options]
 
 
-* **Options**::
 
- :--port: Port number where the chat server will start
+* **Options**
+  
+  :--port: Port number where the chat server will start
 
 * **Example**
   ::
